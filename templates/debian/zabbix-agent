@@ -9,6 +9,7 @@
 ### END INIT INFO
 
 set -e
+set -u
 
 NAME=zabbix_agentd
 DAEMON=/usr/sbin/$NAME
