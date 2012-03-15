@@ -29,7 +29,14 @@ class zabbix::agent inherits zabbix {
         "zabbix_agentd":
             enable 		=> true,
             ensure 		=> running,
-			hasstatus	=> false,
+            hasstatus		=> $::operatingsystem ? {
+              default           => false,
+              /(Debian|Ubuntu)/ => true,
+            },
+            name		=> $::operatingsystem ? {
+              default           => 'zabbix_agentd',
+              /(Debian|Ubuntu)/ => 'zabbix-agent',
+            },
 			hasrestart	=> true,
             require 	=> [ Package["zabbix-agent"], File["$zabbix_config_dir"], File["$zabbix_log_dir"], File["$zabbix_pid_dir"] ];
     }
