@@ -1,6 +1,36 @@
-class zabbix::agent inherits zabbix {
-  $zabbix_userparameter_config_dir = "/etc/zabbix/zabbix_agentd"
-  $zabbix_agentd_conf = "$zabbix_config_dir/zabbix_agentd.conf"
+class zabbix::agent inherits zabbix (
+  $zabbix_userparameter_config_dir = "/etc/zabbix/zabbix_agentd",
+  $zabbix_agentd_conf              = "$zabbix_config_dir/zabbix_agentd.conf",
+) {
+  file {
+    $zabbix_config_dir:
+      ensure  => directory,
+      owner   => root,
+      group   => root,
+      mode    => 755,
+      require => Package["zabbix-agent"];
+
+    $zabbix_log_dir:
+      ensure  => directory,
+      owner   => zabbix,
+      group   => zabbix,
+      mode    => 755,
+      require => Package["zabbix-agent"];
+
+    $zabbix_pid_dir:
+      ensure  => directory,
+      owner   => zabbix,
+      group   => zabbix,
+      mode    => 755,
+      require => Package["zabbix-agent"];
+
+    $zabbix_user_home_dir:
+      ensure  => directory,
+      owner   => zabbix,
+      group   => zabbix,
+      mode    => 700,
+      require => User["zabbix"];
+  }
 
   $zabbix_service_name = $osfamily ? {
     debian  => 'zabbix-agent',
