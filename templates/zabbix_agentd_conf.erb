@@ -18,8 +18,7 @@ PidFile=/var/run/zabbix/zabbix_agentd.pid
 # Mandatory: no
 # Default:
 # LogFile=
-
-LogFile=/var/log/zabbix/zabbix_agentd.log
+LogFile=/var/log/zabbix-agent/zabbix_agentd.log
 
 ### Option: LogFileSize
 #	Maximum size of log file in MB.
@@ -29,6 +28,7 @@ LogFile=/var/log/zabbix/zabbix_agentd.log
 # Range: 0-1024
 # Default:
 # LogFileSize=1
+LogFileSize=0
 
 ### Option: DebugLevel
 #	Specifies debug level
@@ -78,7 +78,6 @@ LogRemoteCommands=1
 # Mandatory: yes
 # Default:
 # Server=
-
 <% if has_variable?('zabbix_proxy') -%>
 Server=<%= zabbix_proxy %>, <%= zabbix_server %>
 <% else -%>
@@ -92,8 +91,7 @@ Server=<%= zabbix_server %>
 #
 # Mandatory: no
 # Default:
-# Hostname=system.hostname
-
+# Hostname=
 Hostname=<%= fqdn %>
 
 ### Option: HostnameItem
@@ -117,6 +115,7 @@ Hostname=<%= fqdn %>
 #
 # Mandatory: no
 # Default:
+# ListenIP=0.0.0.0
 ListenIP=<%= ipaddress %>
 
 ### Option: DisablePassive
@@ -224,7 +223,8 @@ ListenIP=<%= ipaddress %>
 # Include=
 
 # Include=/etc/zabbix/zabbix_agentd.userparams.conf
-Include=/etc/zabbix/zabbix_agentd
+# Include=/etc/zabbix/zabbix_agentd/
+Include=/etc/zabbix/zabbix_agentd.conf.d/
 
 ####### USER-DEFINED MONITORED PARAMETERS #######
 
