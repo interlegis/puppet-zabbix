@@ -78,7 +78,7 @@ LogRemoteCommands=1
 # Mandatory: yes
 # Default:
 # Server=
-<% if has_variable?('zabbix_proxy') -%>
+<% if has_variable?('zabbix_proxy') and zabbix_proxy -%>
 Server=<%= zabbix_proxy %>, <%= zabbix_server %>
 <% else -%>
 Server=<%= zabbix_server %>
