@@ -40,6 +40,10 @@ class zabbix::server (
     ensure => present,
   }
 
+  mysql_user { "$mysql_user@localhost":
+    password_hash => mysql_password( "$mysql_password" );
+  }
+
   mysql::rights{ "Grant zabbix db user":
     ensure   => present,
     database => $mysql_database,
