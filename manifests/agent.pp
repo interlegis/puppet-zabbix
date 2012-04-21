@@ -1,7 +1,7 @@
-class zabbix::agent inherits zabbix (
+class zabbix::agent (
   $zabbix_userparameter_config_dir = "/etc/zabbix/zabbix_agentd",
   $zabbix_agentd_conf              = "$zabbix_config_dir/zabbix_agentd.conf"
-) {
+) inherits zabbix {
   file {
     $zabbix_config_dir:
       ensure  => directory,
