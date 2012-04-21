@@ -1,5 +1,5 @@
 class zabbix::agent (
-  $zabbix_proxy                    = "",
+  $zabbix_proxy                    = false,
   $zabbix_server
 ) inherits zabbix {
   include zabbix::params
