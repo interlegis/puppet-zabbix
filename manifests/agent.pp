@@ -4,8 +4,8 @@ class zabbix::agent (
 ) inherits zabbix {
   include zabbix::params
   
-  $zabbix_userparameter_config_dir = ${zabbix::params::zabbix_userparameter_config_dir}
-  $zabbix_agentd_conf              = ${zabbix::params::zabbix_agentd_conf}
+  $zabbix_userparameter_config_dir = "${zabbix::params::zabbix_userparameter_config_dir}"
+  $zabbix_agentd_conf              = "${zabbix::params::zabbix_agentd_conf}"
   
   file {
     $zabbix_config_dir:
