@@ -19,6 +19,7 @@ class zabbix::server (
   $mysql_user     = "zabbix",
   $mysql_password = "zabbix is our monitoring server"
 ) {
+  include mysql::server
   $zabbix_server_service_status = "/bin/bash /etc/init.d/zabbix-server status"
   Package {
     ensure => present,
