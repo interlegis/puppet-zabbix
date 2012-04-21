@@ -14,7 +14,11 @@
 #
 # Sample Usage:
 #
-class zabbix::server {
+class zabbix::server (
+  $mysql_database = "zabbix",
+  $mysql_user     = "zabbix",
+  $mysql_password = "zabbix is our monitoring server"
+) {
   $zabbix_server_service_status = "/bin/bash /etc/init.d/zabbix-server status"
   Package {
     ensure => present,
@@ -30,5 +34,27 @@ class zabbix::server {
     hasstatus  => true,
     hasrestart => true,
     status     => $zabbix_server_service_status,
+  }
+
+  mysql::database{ "$mysql_database":
+    ensure => present,
+  }
+
+  mysql::rights{ "Grant zabbix db user":
+    ensure   => present,
+    database => $mysql_database,
+    user     => $mysql_user,
+    password => $mysql_password,
+  }
+
+  file {
+    [ "/usr/share/zabbix/conf/zabbix.conf.php", "${zabbix::zabbix_config_dir}/dbconfig.php"]:
+      ensure => present,
+      content => template( "zabbix/zabbix_frontend_php.conf.erb" );
+    "${zabbix::zabbix_config_dir}/zabbix_server.conf":
+      ensure => present,
+      require => [ Mysql::Rights[ "Grant zabbix db user" ], Package[ "zabbix-server-mysql" ] ],
+      notify => Service[ "zabbix-server" ],
+      content => template( "zabbix/zabbix_server.erb" );
   }
 }
