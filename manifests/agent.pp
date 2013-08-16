@@ -1,9 +1,15 @@
 #agent.pp
 
-class zabbix::agent inherits zabbix (
+class zabbix::agent (
   $zabbix_userparameter_config_dir = "/etc/zabbix/zabbix_agentd",
   $zabbix_agentd_conf              = "$zabbix_config_dir/zabbix_agentd.conf",
-) {
+  $zabbix_server		   = undef
+) inherits zabbix {
+
+  if !$zabbix_server {
+    fail("zabbix_server variable missing!")
+  }
+
   file {
     $zabbix_config_dir:
       ensure  => directory,
@@ -24,6 +30,13 @@ class zabbix::agent inherits zabbix (
       owner   => zabbix,
       group   => zabbix,
       mode    => 755,
+      require => Package["zabbix-agent"];
+
+    "/etc/zabbix/zabbix_agentd.conf.d/":
+      ensure  => directory,
+      owner   => zabbix,
+      group   => zabbix,
+      mode    => 644,
       require => Package["zabbix-agent"];
 
     $zabbix_user_home_dir:
@@ -72,7 +85,7 @@ class zabbix::agent inherits zabbix (
     mode    => 644,
     content => template("zabbix/zabbix_agentd_conf.erb"),
     notify  => Service['zabbix_agentd'],
-    require => [ Package["zabbix-agent"], File["$zabbix_config_dir"] ];
+    require => [ Package["zabbix-agent"], File["$zabbix_config_dir"], File["/etc/zabbix/zabbix_agentd.conf.d/"] ];
   }
   file { "init.d/zabbix-agent":
     path    => "/etc/init.d/zabbix-agent",
