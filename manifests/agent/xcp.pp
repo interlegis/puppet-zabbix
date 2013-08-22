@@ -1,6 +1,14 @@
 #xcp.pp
 
-class zabbix::agent::xcp {
+class zabbix::agent::xcp (
+		$zabbix_server = undef,
+		$zabbix_userparameter_config_dir = "/etc/zabbix/zabbix_agentd.conf.d",
+	){
+
+	if !$zabbix_server {
+		fail("zabbix_server variable missing!")
+	}
+	
         yumrepo { "zabbixzone":
                 name => "zabbixzone",
                 baseurl => "http://repo.zabbixzone.com/centos/\$releasever/\$basearch/",
@@ -34,7 +42,7 @@ class zabbix::agent::xcp {
 
         file { "/etc/zabbix/zabbix_agentd.conf":
             owner => zabbix, group => zabbix, mode => 555,
-            content => template('zabbix/zabbix_agentd.conf.erb'),
+            content => template('zabbix/zabbix_agentd_conf.erb'),
             require => Package["zabbix-agent"],
         }
 
@@ -70,7 +78,17 @@ class zabbix::agent::xcp {
                 require => Package["zabbix-agent"],
         }
 
-        service { "zabbix-agent":
+	file { $zabbix_userparameter_config_dir:
+	        ensure  => directory,
+    		owner   => root,
+    		group   => root,
+    		mode    => 755,
+    		require => [ Package["zabbix-agent"] ],
+  	}
+
+
+        service { "zabbix_agentd":
+		name   => "zabbix-agent",
                 ensure => running,
                 enable => true,
                 require => [

@@ -48,19 +48,13 @@ class zabbix::agent (
   }
 
   $zabbix_service_name = $operatingsystem ? {
-				'Debian' => 'zabbix-agent',
-				'Ubuntu' => $lsbdistcodename ? { 
-						'precise' => 'zabbix_agentd',
-						default => 'zabbix-agent',
-					    }	
-                         }
+				/(Debian|Ubuntu)/ => 'zabbix-agent',
+				default => 'zabbix_agentd',
+			 }
   
 	
   $zabbix_service_status = $operatingsystem ? {
-    Debian  => '/bin/bash /etc/init.d/zabbix-agent status',
-    Ubuntu  => $lsbdistcodename ? {  'lucid' => '/bin/bash /etc/init.d/zabbix-agent status',
-                                     default => 'undef',
-                                  }, 
+    /(Debian|Ubuntu)/  => '/bin/bash /etc/init.d/zabbix-agent status',
     default => undef,
   }
   $zabbix_service_hasstatus = $osfamily ? {
