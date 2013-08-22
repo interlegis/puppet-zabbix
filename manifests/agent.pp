@@ -47,12 +47,20 @@ class zabbix::agent (
       require => User["zabbix"];
   }
 
-  $zabbix_service_name = $osfamily ? {
-    debian  => 'zabbix-agent',
-    default => "zabbix_agentd",
-  }
-  $zabbix_service_status = $osfamily ? {
-    debian  => '/bin/bash /etc/init.d/zabbix-agent status',
+  $zabbix_service_name = $operatingsystem ? {
+				'Debian' => 'zabbix-agent',
+				'Ubuntu' => $lsbdistcodename ? { 
+						'precise' => 'zabbix_agentd',
+						default => 'zabbix-agent',
+					    }	
+                         }
+  
+	
+  $zabbix_service_status = $operatingsystem ? {
+    Debian  => '/bin/bash /etc/init.d/zabbix-agent status',
+    Ubuntu  => $lsbdistcodename ? {  'lucid' => '/bin/bash /etc/init.d/zabbix-agent status',
+                                     default => 'undef',
+                                  }, 
     default => undef,
   }
   $zabbix_service_hasstatus = $osfamily ? {
