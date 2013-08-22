@@ -1,0 +1,1 @@
+ssh postgres@localhost '/usr/lib/postgresql/<%=pgsqlversion%>/bin/pg_ctl status -D /var/lib/postgresql/<%=pgsqlversion%>/main | grep PID | wc -l'
