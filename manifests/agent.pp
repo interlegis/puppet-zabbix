@@ -3,7 +3,8 @@
 class zabbix::agent (
   $zabbix_userparameter_config_dir = "/etc/zabbix/zabbix_agentd",
   $zabbix_agentd_conf              = "$zabbix_config_dir/zabbix_agentd.conf",
-  $zabbix_server		   = undef
+  $zabbix_server		   = undef,
+  $zabbix_timeout		   = 3,
 ) inherits zabbix {
 
   if !$zabbix_server {

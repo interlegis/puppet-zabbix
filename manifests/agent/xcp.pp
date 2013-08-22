@@ -3,6 +3,7 @@
 class zabbix::agent::xcp (
 		$zabbix_server = undef,
 		$zabbix_userparameter_config_dir = "/etc/zabbix/zabbix_agentd.conf.d",
+		$zabbix_timeout = 3,
 	){
 
 	if !$zabbix_server {
