@@ -24,11 +24,20 @@ class zabbix::server {
     require => Class['zabbix'],
   }
   package { 'zabbix-frontend-php': }
+
+  package { 'php-xml-parser': ensure => 'installed' }
+  package { 'php-xml-rpc': ensure => 'installed' }
+  package { ['snmp','snmp-mibs-downloader']: ensure => 'installed' }
+  file { "/etc/snmp/snmp.conf":
+	content => '## Puppet managed. Empty to load default mib files.',
+  }
+
   service { 'zabbix-server':
     ensure     => running,
     enable     => true,
     hasstatus  => true,
     hasrestart => true,
     status     => $zabbix_server_service_status,
+    require    => Package['zabbix-server-mysql'],
   }
 }

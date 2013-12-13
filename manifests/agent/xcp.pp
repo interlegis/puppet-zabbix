@@ -91,6 +91,7 @@ class zabbix::agent::xcp (
         service { "zabbix_agentd":
 		name   => "zabbix-agent",
                 ensure => running,
+		status => '/bin/bash /etc/init.d/zabbix-agent status',
                 enable => true,
                 require => [
                         Package["zabbix-agent"],
