@@ -1,8 +1,11 @@
+#zabbix.pp
+
 class zabbix(
-  $zabbix_config_dir = "/etc/zabbix",
+  $zabbix_config_dir    = "/etc/zabbix",
   $zabbix_user_home_dir = "/var/lib/zabbix",
-  $zabbix_log_dir = "/var/log/zabbix/",
-  $zabbix_pid_dir = "/var/run/zabbix/",
+  $zabbix_log_dir       = "/var/log/zabbix/",
+  $zabbix_pid_dir       = "/var/run/zabbix/",
+  $zabbix_uid           = undef,
 ) {
 
   user { 'zabbix':
@@ -11,7 +14,8 @@ class zabbix(
     password   => '!!',
     shell      => '/bin/bash',
     gid        => 'zabbix',
-    managehome => 'true',	
+    managehome => 'true',
+    uid        => $zabbix_uid,	
   }
 
   group { 'zabbix':
